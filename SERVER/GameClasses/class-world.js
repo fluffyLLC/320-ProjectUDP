@@ -53,7 +53,7 @@ exports.World = class World{
 
 			for (var x = 0; x < this.width; x++) {
 
-				var value = Math.abs(psMaker.noise.simplex2(x+(x/this.width),y+(y/this.height)));
+				var value = Math.abs(psMaker.noise.simplex2((x/100.0) ,(y/100.0)));
 				//var value = Math.abs(psMaker.noise.perlin2(x/100,y/100));
 				//value = Math.pow(value,5);
 				//value = Math.round(value);

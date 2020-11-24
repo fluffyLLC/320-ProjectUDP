@@ -26,8 +26,8 @@ exports.Game = class Game {
 	}
 
 	initalizeMap(){
-		this.mapWidth = 500;
-		this.mapHeight = 100; 
+		this.mapWidth = 2000;
+		this.mapHeight = 500; 
 		//console.log(this.world.generateWorld(3,2));
 		this.world.generateWorld(this.mapWidth,this.mapHeight);
 

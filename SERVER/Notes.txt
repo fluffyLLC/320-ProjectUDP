@@ -1,2 +1,10 @@
 AI: 
 I want sounds to draw them in, esspecially to be able to cvreate hords, but I don't want "all" zombies to be listening at all times
+
+
+
+
+
+Terrain and world Generation:
+Send the terrain info at the beginning of the game, and send delta packets when things change
+you will need an agnowlegment system to ensure that packets are recived and resent if they are dropped
