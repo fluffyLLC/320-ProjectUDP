@@ -1,11 +1,15 @@
-psMaker = require('./noisejs-master/perlin.js');
+const NetworkObj = require("./class-networkobject.js").NetworkObject;
+const psMaker = require('./noisejs-master/perlin.js');
+
 
 
 //psMaker.noise.seed(1);
 
-exports.World = class World{
+exports.World = class World extends NetworkObj{
 
 	constructor(){
+		super();
+		this.classID = "WRLD";
 		//console.log('constructing');
 		this.width = 2000;
 		this.height = 500;

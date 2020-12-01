@@ -1,0 +1,14 @@
+TODO: design protocol and exchange for map generation
+TODO: Design and impliment basic movement delta packets 
+
+
+
+
+
+
+
+From Client:
+
+
+
+From Server:
