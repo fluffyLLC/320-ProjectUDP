@@ -1,9 +1,9 @@
 const Render = require('./GameClasses/class-asciirender.js').Render;
 const World = require('./GameClasses/class-world.js').World; 
 
-const readline = require('readline');
-readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
+//const readline = require('readline');
+//readline.emitKeypressEvents(process.stdin);
+//process.stdin.setRawMode(true);
 
 
 
@@ -34,43 +34,22 @@ exports.Game = class Game {
 
 		this.playerPos = {x:this.mapWidth/2,y:this.mapHeight/2};
 		//this.ascii.render(this.playerPos,this.world);
-		this.rl = readline.createInterface(process.stdin);
+		//this.rl = readline.createInterface(process.stdin);
 
-		process.stdin.on('keypress', (chunk, key) => {
-			this.handleKeyInput(key);
+		//process.stdin.on('keypress', (chunk, key) => {
+			//this.handleKeyInput(key);
 
 			//console.log("chunk: " + chunk + ", key: " + key.name);
 			//console.log(this.rl.line);
-		});
+		//});
 
 	}
 
-	update(){
+	update(){//Do I need an update in the map class?
 
 		this.time += this.dt;
+		//this.ascii.render(this.playerPos,this.world);
 
-		
-		this.ascii.render(this.playerPos,this.world);
-
-		
-
-
-
-
-
-
-
-
-		//console.log("getfucked");
-
-		//console.clear();
-		//this.screen += this.screen;
-		//for (var i = 0; i < this.screenDepth; i++) {
-		//console.log(this.screen);
-		//}
-		//console.log(process.stdout.isTTY);
-		
-		//console.log("\n" + tty.WriteStream);
 		setTimeout(()=>this.update(), 16);
 	}
 

@@ -1,14 +1,43 @@
 TODO: design protocol and exchange for map generation
 TODO: Design and impliment basic movement delta packets 
 
+----------------------------------------------------
+Header | all packets will contain the following
+----------------------------------------------------
+	
+	O 	L	Datatype	Desc
+	================================
+	0	4	ascii		"FOUR" four letter packet ID
+	4	1	uint8		"0|1" ack indicator. (0: does not require ack, 1: requires ack)
+	5	4	uint32		packet ID, this wraps back to 0 if it hits max
 
-
+-----------------------------------------------------
 
 
 
 
 From Client:
 
+JOIN - Sent when joining the game
+
+	O	L	Datatype	Desc
+	========================
+	0	4	ascii		"JOIN"
+
 
 
 From Server:
+
+MAPG - This packet is sent containing all of the ground data for the map. This packet requires acknowledgment. 
+
+	O 	L	Datatype	Desc
+	================================
+	0	4	ascii		"MAPG"
+	4	1	uint8		"1" 
+	5	4	uint32		Packet ID
+
+	9	??	uint8		Type of ground tile. There are 255 possible types! there is one int for 					every tile
+
+
+
+
