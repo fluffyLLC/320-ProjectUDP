@@ -1,22 +1,27 @@
 const NetworkObj = require("./class-networkobject.js").NetworkObject;
 const psMaker = require('./noisejs-master/perlin.js');
-
+const PacketBuilder = require('./class-packetbuilder.js').PacketBuilder;
+const PHelper = new PacketBuilder();//If I do not take this step I cannot access the methods inside of packet builder. I do not know why this is the case, singleton does not seem to help either.
 
 
 //psMaker.noise.seed(1);
 
 exports.World = class World extends NetworkObj{
 
+
 	constructor(){
 		super();
 		this.classID = "WRLD";
 		//console.log('constructing');
-		this.width = 2000;
-		this.height = 500;
+		this.width = 20;
+		this.height = 50;
 		this.seed = Math.random();
 		//Math.round
 		//TODO: add 'map' property that contains a visual representation of the world
 		this.terrain = [];
+		//console.log(NetworkObj.serialize());
+		//console.log(PacketBuilder.Singleton.makeHeader("TEST",0));
+
 		/*process.stdout.on('resize',() => {
 			console.clear();
 			this.generateWorld();
@@ -33,6 +38,7 @@ exports.World = class World extends NetworkObj{
 
 
 		psMaker.noise.seed(this.seed);
+
 		/*
 		if(process.stdout.isTTY){
 			//console.log(isTTY);
@@ -40,6 +46,7 @@ exports.World = class World extends NetworkObj{
 			this.height = process.stdout.rows;
 		}
 		*/
+
 		this.generateTerrain();
 
 	}
@@ -61,7 +68,7 @@ exports.World = class World extends NetworkObj{
 				//var value = Math.abs(psMaker.noise.perlin2(x/100,y/100));
 				//value = Math.pow(value,5);
 				//value = Math.round(value);
-				value = this.map(value,0,0.65,0,1);
+				value = this.mapVal(value,0,0.65,0,1);
 				//itterations++;
 				//total += value;
 				//if(value > max) max = value;
@@ -87,31 +94,61 @@ exports.World = class World extends NetworkObj{
 
 	}
 
-	map(value, low1, high1, low2, high2) {
-    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+	mapVal(value, low1, high1, low2, high2) { //TODO: factor this out into a new math helper class
+
+   		return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 	}
 
 	handleTerrainVal(value,x,y){
-	if(value > 0.7){
 
-			this.terrain[y][x] = String.fromCharCode(9608); 
+	if(value > 0.7){
+			this.terrain[y][x] = 1;
+			//this.terrain[y][x] = String.fromCharCode(9608); 
 			//terraintest += String.fromCharCode(9608);//█
 
 	 	}else if(value > 0.5){
-
-			this.terrain[y][x] = String.fromCharCode(9619);
+	 		this.terrain[y][x] = 2;
+			//this.terrain[y][x] = String.fromCharCode(9619);
 			//terraintest += String.fromCharCode(9619);//▓	
 
 	 	}else if(value > 0.25){
-
-			this.terrain[y][x] = String.fromCharCode(9618);
+	 		this.terrain[y][x] = 3;
+			//this.terrain[y][x] = String.fromCharCode(9618);
 			//terraintest += String.fromCharCode(9618);//▒	
 
 	 	}else{
+	 		this.terrain[y][x] = 4;
 	 		//console.log(value);
-	 		this.terrain[y][x] = String.fromCharCode(9617);
+	 		//this.terrain[y][x] = String.fromCharCode(9617);
 			//terraintest += String.fromCharCode(9617);//░	
 		}
+	}
+
+
+
+	serialize(){//
+
+		let packet = PHelper.makeHeader("MAPG",1);//add the hedder
+
+		let mapLength = Buffer.alloc(2);
+		mapLength.writeUInt16BE(this.width,0);//create a buffer with the width of the map
+
+		packet = Buffer.concat([packet,mapLength]);//add it to the packet 
+
+
+		for (var y = 0; y < this.height; y++) {
+
+			let mapRow = Buffer.from(this.terrain[y]);//create a buffer with the terrain data in it
+
+			packet = Buffer.concat([packet,mapRow])//add it to the buffer
+
+		} 
+
+		console.log(packet.length);
+
+		return packet;
+
+
 	}
 }
 

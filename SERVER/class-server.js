@@ -1,7 +1,7 @@
 const Game = require("./class-game.js").Game;
 const Client = require("./class-client.js").Client;
 const Pawn = require("./GameClasses/class-player.js").Player;
-//const UDP = require('dgram');
+
 
 exports.Server = class Server{
 
@@ -11,7 +11,7 @@ exports.Server = class Server{
 
 		//create socket
 		this.sock = require('dgram').createSocket("udp4");
-		console.log(this.sock.on);
+		//console.log(this.sock.on);
 
 		//setup event listeners
 		this.sock.on("error",(e)=>this.onError(e));
@@ -39,6 +39,7 @@ exports.Server = class Server{
 	}
 	
 	onPacket(msg,rinfo){
+		console.log("packet coming in");
 		//we would normally check if the client alredy existed and thattehy actually wanted to play this game
 		//console.log("message recived");
 
@@ -77,7 +78,7 @@ exports.Server = class Server{
 		const client = new Client(rinfo);
 
 		//depending on scene (and other conditions) spawn pawn
-		client.spawnPawn(this.game);
+		//client.spawnPawn(this.game);
 
 		this.clients[key] = client;
 
@@ -85,10 +86,12 @@ exports.Server = class Server{
 
 		this.showClientList();
 
+		this.sendPacketToClient(this.game.world.serialize(), client);//send the client a copy of the map. I would prefer to do this elseware. --this is primarily for debugging
 
-		// TODO: sent CREATE replication packets for every object...
-		const packet = this.game.makeREPL(false);
-		this.sendPacketToClient(packet,client);// TODO: needs ACK!! 
+
+		//TODO: sent CREATE replication packets for every object...
+		//const packet = this.game.makeREPL(false);
+		//this.sendPacketToClient(packet,client);// TODO: needs ACK!! 
 
 
 		return client;
@@ -114,13 +117,13 @@ exports.Server = class Server{
 
 	}
 
-	getPlayer(num = 0){
+	getPlayer(num = 0){//returns the client given a player number (starts at 0)
 
 		num = parseInt(num);
 		let i = 0;
 		for(var key in this.clients){
 			if(num == i) return this.clients[key];
-			return this.clients[num];
+			//return this.clients[num];//???
 			i++;
 		}
 

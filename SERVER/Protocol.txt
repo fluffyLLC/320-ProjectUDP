@@ -1,15 +1,39 @@
 TODO: design protocol and exchange for map generation
 TODO: Design and impliment basic movement delta packets 
 
+
+Packet Framework
+======================================
+
+Ideas for packet infistructure 
+1.) create a packet object that holds all the relevent data for a packet
+2.) create a packet reciver/distributer ie. aplication layer packet hanlder: Application Layer 
+3.) create a packet helper for hanleing repeticious packet building and similar tasks 
+
+Server:
+registering new clients
+
+Application Layer:
+fragment outgoing packets
+ensure all fragmented packets are recived by the client
+store copies of packets that require agnoledgment
+purge copies once a packet has been acknowleged
+communicate with relevant clients
+
+
+
+
 ----------------------------------------------------
 Header | all packets will contain the following
 ----------------------------------------------------
 	
 	O 	L	Datatype	Desc
 	================================
-	0	4	ascii		"FOUR" four letter packet ID
+	0	4	ascii		"FOUR" four letter packet type
 	4	1	uint8		"0|1" ack indicator. (0: does not require ack, 1: requires ack)
 	5	4	uint32		packet ID, this wraps back to 0 if it hits max
+	//Include Packet length in the header
+	//Include network ID in the header // maybe not // we need to think more on this
 
 -----------------------------------------------------
 
@@ -17,6 +41,13 @@ Header | all packets will contain the following
 
 
 From Client:
+====================================
+
+ACKN - sent to acknowlege the recipt of a packet that requires acknowlegment
+
+	O	L	Datatype	Desc
+	========================
+	0	4	ascii		"ACKN"
 
 JOIN - Sent when joining the game
 
@@ -27,6 +58,7 @@ JOIN - Sent when joining the game
 
 
 From Server:
+==================================
 
 MAPG - This packet is sent containing all of the ground data for the map. This packet requires acknowledgment. 
 
@@ -34,9 +66,13 @@ MAPG - This packet is sent containing all of the ground data for the map. This p
 	================================
 	0	4	ascii		"MAPG"
 	4	1	uint8		"1" 
-	5	4	uint32		Packet ID
+	5	4	uint32BE	Packet ID 
 
-	9	??	uint8		Type of ground tile. There are 255 possible types! there is one int for 					every tile
+	//Include number of tiles
+
+	9	2	uint16BE	map X-length (width or coloms)	
+	11	??	uint8		Type of ground tile. There are 255 possible types!
+						there is one int for every tile
 
 
 

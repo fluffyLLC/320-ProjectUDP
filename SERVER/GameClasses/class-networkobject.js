@@ -37,12 +37,12 @@ exports.NetworkObject = class NetworkObject{
 		buffer.writeFloatBE(this.scale.z,33);
 
 		return buffer;*/
+		return"empty";
 
 	}
 
 	deserialize(buffer){
 		//this.position.x = buffer.readFloatBE()
-
 		//No desearialisation atm
 	}
 

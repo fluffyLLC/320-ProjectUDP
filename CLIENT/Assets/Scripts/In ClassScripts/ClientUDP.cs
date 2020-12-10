@@ -81,9 +81,13 @@ public class ClientUDP : MonoBehaviour
     private void ProcessPacket(Buffer packet)
     {
         //print("packet recieved");
-        if (packet.Length < 4) return;
+        if (packet.Length < 9) return;
 
         string id = packet.ReadString(0, 4);
+
+        //TODO: process Header for frag annd ACK packets
+
+
         switch (id) {
             case "REPL":
 
@@ -93,18 +97,31 @@ public class ClientUDP : MonoBehaviour
                 break;
 
             case "PAWN":
-                if (packet.Length < 5) return;
+               // if (packet.Length < 5) return;
 
-                byte networkID = packet.ReadUInt8(4);
+               // byte networkID = packet.ReadUInt8(4);
 
-                NetworkObject obj = NetworkObject.GetObjectByNetworkID(networkID);
-                if (obj) {
+                //NetworkObject obj = NetworkObject.GetObjectByNetworkID(networkID);
+                //if (obj) {
                     //if (obj.classID != "PAWN") return; 
-                    Pawn P = (obj as Pawn);
-                    if (P != null) P.canPlayerControl = true;
-                }
+                 //   Pawn P = (obj as Pawn);
+                   // if (P != null) P.canPlayerControl = true;
+               // }
 
                 break;
+            case "MAPG"://we are currently using our packet type as our classID, we may want to decouple this in the future 
+                if (packet.Length < 11) return;
+
+                NetworkObject obj = ObjectRegistry.SpawnFrom(id);
+
+                obj.Deserialize(packet.Slice(9));
+                
+
+                print("map recived");
+
+
+                break;
+
 
 
 
@@ -115,7 +132,7 @@ public class ClientUDP : MonoBehaviour
         
     }
 
-    private void ProcessPacketREPL(Buffer packet)
+    private void ProcessPacketREPL(Buffer packet) //not recognised in protocall, this function is here for refrence
     {
         if (packet.Length < 5) return;
        // print(packet);

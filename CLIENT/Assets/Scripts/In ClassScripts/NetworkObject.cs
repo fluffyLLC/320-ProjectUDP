@@ -38,7 +38,7 @@ public class NetworkObject : MonoBehaviour
         //TODO: turn object into a byte array
     }
 
-    public virtual int Deserialize(Buffer packet) {
+    public virtual int Deserialize(Buffer packet) {//TODO: deserialise does not nessicarily need to retun an int
 
         networkID = packet.ReadUInt8(0);
 

@@ -14,9 +14,9 @@ exports.Game = class Game {
 		this.dt = 16/1000;
 		this.server = server;
 		this.world = new World();
-		this.ascii = new Render();
+		//this.ascii = new Render();
 
-		this.true = true;
+		//this.true = true;
 
 		this.initalizeMap();
 
@@ -26,18 +26,18 @@ exports.Game = class Game {
 	}
 
 	initalizeMap(){
-		this.mapWidth = 2000;
-		this.mapHeight = 500; 
+		this.mapWidth = 20; 
+		this.mapHeight = 50; 
 		//console.log(this.world.generateWorld(3,2));
 		this.world.generateWorld(this.mapWidth,this.mapHeight);
 
 
-		this.playerPos = {x:this.mapWidth/2,y:this.mapHeight/2};
-		//this.ascii.render(this.playerPos,this.world);
-		//this.rl = readline.createInterface(process.stdin);
+	//	this.playerPos = {x:this.mapWidth/2,y:this.mapHeight/2};
+	//	this.ascii.render(this.playerPos,this.world);
+	//	this.rl = readline.createInterface(process.stdin);
 
-		//process.stdin.on('keypress', (chunk, key) => {
-			//this.handleKeyInput(key);
+	//	process.stdin.on('keypress', (chunk, key) => {
+		//	this.handleKeyInput(key);
 
 			//console.log("chunk: " + chunk + ", key: " + key.name);
 			//console.log(this.rl.line);
@@ -46,12 +46,13 @@ exports.Game = class Game {
 	}
 
 	update(){//Do I need an update in the map class?
-
+		//console.log("generating");
 		this.time += this.dt;
 		//this.ascii.render(this.playerPos,this.world);
 
 		setTimeout(()=>this.update(), 16);
 	}
+
 
 	handleKeyInput(key){
 		//console.log(key.name);
