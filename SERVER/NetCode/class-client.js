@@ -1,6 +1,6 @@
-const NetworkObj = require("./GameClasses/class-networkobject.js").NetworkObject;
-const Game = require("./class-game.js").Game;
-const Pawn = require("./GameClasses/class-player.js").Player;
+//const NetworkObj = require("./GameClasses/class-networkobject.js").NetworkObject;
+//const Game = require("./class-game.js").Game;
+//const Pawn = require("./GameClasses/class-player.js").Player;
 
 
 

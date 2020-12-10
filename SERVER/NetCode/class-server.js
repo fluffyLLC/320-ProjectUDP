@@ -1,6 +1,6 @@
-const Game = require("./class-game.js").Game;
+const Game = require("D:/320/320-ProjectUDP/SERVER/GameClasses/class-game.js").Game;
 const Client = require("./class-client.js").Client;
-const Pawn = require("./GameClasses/class-player.js").Player;
+const Pawn = require("D:/320/320-ProjectUDP/SERVER/GameClasses/class-player.js").Player;
 
 
 exports.Server = class Server{

@@ -1,6 +1,6 @@
 const NetworkObj = require("./class-networkobject.js").NetworkObject;
 const psMaker = require('./noisejs-master/perlin.js');
-const PacketBuilder = require('./class-packetbuilder.js').PacketBuilder;
+const PacketBuilder = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-packetbuilder.js').PacketBuilder;
 const PHelper = new PacketBuilder();//If I do not take this step I cannot access the methods inside of packet builder. I do not know why this is the case, singleton does not seem to help either.
 
 
@@ -13,8 +13,8 @@ exports.World = class World extends NetworkObj{
 		super();
 		this.classID = "WRLD";
 		//console.log('constructing');
-		this.width = 20;
-		this.height = 50;
+		this.width = 2000;
+		this.height = 500;
 		this.seed = Math.random();
 		//Math.round
 		//TODO: add 'map' property that contains a visual representation of the world
@@ -131,7 +131,7 @@ exports.World = class World extends NetworkObj{
 		let packet = PHelper.makeHeader("MAPG",1);//add the hedder
 
 		let mapLength = Buffer.alloc(2);
-		mapLength.writeUInt16BE(this.width,0);//create a buffer with the width of the map
+		mapLength.writeUInt16BE(this.width);//create a buffer with the width of the map
 
 		packet = Buffer.concat([packet,mapLength]);//add it to the packet 
 

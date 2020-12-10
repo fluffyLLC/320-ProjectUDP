@@ -1,5 +1,5 @@
-const Render = require('./GameClasses/class-asciirender.js').Render;
-const World = require('./GameClasses/class-world.js').World; 
+const Render = require('./class-asciirender.js').Render;
+const World = require('./class-world.js').World; 
 
 //const readline = require('readline');
 //readline.emitKeypressEvents(process.stdin);
