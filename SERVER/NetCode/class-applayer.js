@@ -1,14 +1,12 @@
 const AppHelper = require("./class-apphelper.js").AppHelper;
-const PHelper = new AppHelper();
-/*
-let limit = 1000;
-let info = Math.floor(8000 + (Math.random()*1000));
-
-console.log(`Packet number is ${Math.ceil(info/limit)}`);
-*/
+const PHelper = new AppHelper();//static methods appear to bug out when refrencing static variables from the same class, so this appears to be the only way for me to get the makeHeader() method to work propperly
 
 
-//sending should be done through the app layer and all reciving shuold come throught ht eapp layer
+//sending should be done through the app layer and all reciving shuold come throught the app layer
+//the idea is to abstract more complex packet processing away from the server
+//this is primarily for organisation, but also to keep things a little more "bug proof"
+//ie as we create more complex solutions they are less coupled with other aspeckts of the net code
+//that's the thought anyways
 exports.AppLayer = class AppLayer{
 
 	static Singleton;
@@ -16,8 +14,8 @@ exports.AppLayer = class AppLayer{
 	static _MTU = 1000;//the MTU should be publicly available but not editable
 
 	get mtu(){
-
 		return AppLayer._MTU;
+
 	}
 	//static Server; //???? should the server be static?
 
@@ -54,7 +52,6 @@ exports.AppLayer = class AppLayer{
 					this.sendPacketToClientNoAckCheck(unagnowleged,c);
 
 				}
-
 
 			}else{
 				
@@ -103,7 +100,7 @@ exports.AppLayer = class AppLayer{
 	}
 
 
-	fragPacket(packet){//fragments an incomin packet
+	fragPacket(packet){//fragments an incoming packet
 		console.log("packet length: " + packet.length);
 		const packetLength = packet.length;
 		const fragHLength = 18;
@@ -144,7 +141,6 @@ exports.AppLayer = class AppLayer{
 
 
 		return frags;
-
 	}
 
 	makeFragHeader(fragID,fragOrder,totalOffset,bytesSent){
@@ -169,7 +165,7 @@ exports.AppLayer = class AppLayer{
 }//end app layer
 
 
-/*
+/* //debugging on the app layer. Because I was building so much without connecting to the client I tried to occasionally check to see if it was functioning as expected with no bugs
 let appLayer = new this.AppLayer(null);//test code 
 let nums = [];
 for(let i = 0;i < 3000;i++){

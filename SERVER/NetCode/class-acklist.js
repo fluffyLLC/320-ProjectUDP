@@ -2,17 +2,23 @@
 
 
 
+//this object stores and sorts packets that need to be acgnowleged
+//a new AckList() object is  (at the time of this comment) made for each client so that 
+// all ack exchanges exist relative to the individual client. Ie. if client A ack's a packet 420 but client B has not
+// client A will not overwrite client B's ack (or lack thereof).
 exports.AckList = class AckList{//I might want to move a lot of this functionality back out to the appLayer so that I can doe things ore inteligently. ie keep this as assisted storage rather than as a handler
 
 	constructor(){
-		this.ackPacketsByID = [];
-		this.ackPacketsByOrder = [];
+		this.ackPacketsByID = []; //this allows us to access packets via their ID 
+		this.ackPacketsByOrder = []; //this tracks packets in the order in which they should be sent (0 first, 1 second and so on) 
 		//this.fragGroups = [];
 
 		
 	}//TODO: add a timeout 
 
-	ackPacket(msg){//this low key sucks, but I think that it should work for now
+
+	ackPacket(msg){//ack a the packet passed in and 
+		//this low key sucks, ie. it is pretty fragile atm, but I think that it should work for now
 		if(msg.length <8) return;//check that we have all of the info
 
 		let packetID = msg.readUInt32BE(4);

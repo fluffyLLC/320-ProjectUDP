@@ -5,26 +5,32 @@ TODO: Design and impliment basic movement delta packets
 Packet Framework
 ======================================
 
-Ideas for packet infistructure 
-1.) create a packet object that holds all the relevent data for a packet
-2.) create a packet reciver/distributer ie. aplication layer packet hanlder: Application Layer 
-3.) create a packet helper for hanleing repeticious packet building and similar tasks 
 
 Server:
-registering new clients
+> register new clients
+> innitiate new clients
+> remove old clients
+> send packets when the App-layer says to do so
 
 Application Layer:
-fragment outgoing packets
-ensure all fragmented packets are recived by the client
-store copies of packets that require agnoledgment
-purge copies once a packet has been acknowleged
-communicate with relevant clients
+> fragment outgoing packets
+> ensure all fragmented packets are recived by the client
+> store copies of packets that require agnoledgment (inside of client)
+> purge copies once a packet has been acknowleged
+> communicate with relevant clients
+
+Client:
+> track and ack for this specific client
+> process packets relevant to this specific client (such as input)
+> 
+
+AppHelper:
+> Handle certian redundant serialisation tasks (construction of headers)
+> track/generate misc ID's (packet ID, frag ID)
+> 
 
 
-
-
-----------------------------------------------------
-Header | all packets from server will contain the following
+Header | all packets from server will contain the following at the start
 ----------------------------------------------------
 	
 	O 	L	Datatype	Desc
@@ -32,10 +38,42 @@ Header | all packets from server will contain the following
 	0	4	ascii		"FOUR" four letter packet type
 	4	1	uint8		"0|1" ack indicator. (0: does not require ack, 1: requires ack)
 	5	4	uint32		packet ID, this wraps back to 0 if it hits max
-	//Include Packet length in the header
-	//Include network ID in the header // maybe not // we need to think more on this
+	//may want ot include Packet length in the header (some sotrt of corruption check would be useful)
+	//may want to include network ID in the header // maybe not // we need to think more on this
 
 -----------------------------------------------------
+
+
+ACK Exchange
+-----------------------------------------------------
+an ack is normally a one off acknowlegment. This serves primarily as a way to ensure that data has been sent successfully (or that is the intent at least). Normally this exchange is one sided 
+
+					server ---Packet---> Client
+ 					server <---Ack--- Client
+					       *~* Done *~*
+
+The primary enforcment mechanism would be a timeout (which I have yet to impliment). The ack exchange that I have built for Frag packets is similar, except the next packet in a frag sequence is sent uppon reciving ack. The final frag ack is not marked as a frag ack, this is so that we do not attempt to send another frag packet, and the packet transmitted within the frag sequence is still stored for Ackin case something catostrophically failes durring the frag ack sequence. If we add a number to rpresent the order and packet ID, and the letter F to signify a frag ack, a frag exchange under ideal network conditions (with three frag packets) would look something like this: 
+
+			<server --Packet0--> AppLayer: Frag and store packet0, send first frag>
+
+					server ----Frag1---> Client
+					server <---Ack1F---- Client
+
+					server ----Frag2---> Client
+					server <---Ack2F---- Client
+
+					server ----Frag3---> Client		
+					server <---Ack3---- Client
+
+			<client compiles and processes packet 0 packet>
+				
+				  	server <---Ack0---- Client
+
+      					 *~* Done *~*
+
+Over the local network I am pretty sure that this is what the exchange typically looks like. As you can see the exchange is pretty simple. It is also realitivly vulnerable, if any one of the frag packets is unsucessfull communication is haulted. In the current implimentation we would have to wait for a seperate packet requiering Ack to be sent in order for an error to be detected and for communicaiton to resume. A simple timeout would go a long way to helping to solve this. I would also want to have some method for checking the packet against corruption. The fragmentation and compilation/serialisation is pretty robust but errors in network transmission that would hault communication entirely mean that that wouldn't matter. Affordances have been made for the off chance that packets are sent out of order. On the client side, packets are stored until they have recived the appropriate initalisation information, and then their data is written directly to it's location in the original packet. So as long as all frag packts reach the client and they do so uncorrupted processing of a frag sequence will(should) be successful. On the server side we ave some basic ditection to see if ack/frag packets are recived in order and to correct the order if frag packets are sent out of order. 
+
+
 
 
 
@@ -54,12 +92,13 @@ ACKN - sent to acknowlege the recipt of a packet that requires acknowlegment
 							the final frag ack //could be more efficent?
 
 
-
 JOIN - Sent when joining the game
 
 	O	L	Datatype	Desc
 	========================
 	0	4	ascii		"JOIN"
+
+
 
 
 

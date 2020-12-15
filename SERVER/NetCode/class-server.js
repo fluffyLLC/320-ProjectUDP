@@ -1,6 +1,6 @@
 const Game = require("../GameClasses/class-game.js").Game;
 const Client = require("./class-client.js").Client;
-const Pawn = require("../GameClasses/class-player.js").Player;
+const Pawn = require("../GameClasses/class-player.js").Player;//I don't think that we are 
 const AppLayer = require("./class-applayer.js").AppLayer;
 
 

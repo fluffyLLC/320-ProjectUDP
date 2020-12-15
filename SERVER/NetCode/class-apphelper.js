@@ -1,24 +1,23 @@
 
 
-
-exports.AppHelper = class AppHelper{
-	//TODO: refactor packet builder into AppHelper
+//the goal of the app haleper is to offload some redundant tasks from the app layer and help keep things organised
+exports.AppHelper = class AppHelper{ 
 	
 	static _idCount = 0;
 
 	static _fragID  = 0
 
-	get nextPacketID(){//TODO:rename this to getNewPacketID
-		//if(AppHelper._idCount >= 4294967295){//if we hit the UInt32 max num wrap teh value
+	get nextPacketID(){
+		if(AppHelper._idCount >= 4294967295){//if we hit the UInt32 max num wrap teh value
 			//console.log("reseting PacketID");
-			//AppHelper._idCount = 0;
-		//}
+			AppHelper._idCount = 0;
+		}
 		//console.log("ID :" + AppHelper._idCount);
 		return ++AppHelper._idCount;
 	}
 
-	get nextFragID(){//TODO:rename this to getNewPacketID
-		if(AppHelper._fragID >= 255){//if we hit the UInt32 max num wrap teh value
+	get nextFragID(){
+		if(AppHelper._fragID >= 255){//if we hit the UInt8 max num wrap the value
 			AppHelper._fragID = 0;
 		}
 
@@ -34,7 +33,8 @@ exports.AppHelper = class AppHelper{
 
 	}
 
-	makeHeader(packetType,requiresResponse){
+
+	makeHeader(packetType,requiresResponse){ 
 		let packet = Buffer.alloc(9);
 
 		packet.write(packetType,0);
