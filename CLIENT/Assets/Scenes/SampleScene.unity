@@ -385,9 +385,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map(Grid)
       objectReference: {fileID: 0}
-    - target: {fileID: 8681157625983518583, guid: 75d15b0952e5a044fbb7ce3bf8fc73f3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75d15b0952e5a044fbb7ce3bf8fc73f3, type: 3}

@@ -128,6 +128,7 @@ exports.AppLayer = class AppLayer{
 			let header;
 
 			if(i == 0){
+				console.log("packet length: " + packet.length);
 				header = this.makeFragHeader(fragID,i+1,packetLength,dataLength);
 			} else{
 				header = this.makeFragHeader(fragID,i+1,imax,dataLength);
