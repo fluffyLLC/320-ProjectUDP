@@ -2,9 +2,9 @@ const Render = require('./class-asciirender.js').Render;
 const World = require('./class-world.js').World; 
 const AppLayer = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-applayer.js').AppLayer;
 
-//const readline = require('readline');
-//readline.emitKeypressEvents(process.stdin);
-//process.stdin.setRawMode(true);
+const readline = require('readline');
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
 
 
 
@@ -15,7 +15,7 @@ exports.Game = class Game {
 		this.dt = 16/1000;
 		//this.server = server;
 		this.world = new World();
-		//this.ascii = new Render();
+		this.ascii = new Render();
 
 		//this.true = true;
 
@@ -33,16 +33,15 @@ exports.Game = class Game {
 		this.world.generateWorld(this.mapWidth,this.mapHeight);
 
 
-	//	this.playerPos = {x:this.mapWidth/2,y:this.mapHeight/2};
-	//	this.ascii.render(this.playerPos,this.world);
-	//	this.rl = readline.createInterface(process.stdin);
+		this.playerPos = {x:this.mapWidth/2,y:this.mapHeight/2};
+		this.ascii.render(this.playerPos,this.world);
+		this.rl = readline.createInterface(process.stdin);
 
-	//	process.stdin.on('keypress', (chunk, key) => {
-		//	this.handleKeyInput(key);
-
+		process.stdin.on('keypress', (chunk, key) => {
+		this.handleKeyInput(key);
 			//console.log("chunk: " + chunk + ", key: " + key.name);
 			//console.log(this.rl.line);
-		//});
+		});
 
 	}
 

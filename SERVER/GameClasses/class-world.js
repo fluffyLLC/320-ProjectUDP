@@ -134,14 +134,33 @@ exports.World = class World extends NetworkObj{
 
 		packet = Buffer.concat([packet,mapLength]);//add it to the packet 
 
+		let map = Buffer.alloc(this.height*this.width);
+		let i = 0;
+		for (var y = 0; y < this.height; y++) {
+			for(var x = 0; x < this.width;x++){
+				map.writeUInt8(this.terrain[y][x],i);
+				i++;
+			}
 
+			//console.log("y: " +y);
+			//let mapRow = Buffer.from(this.terrain[y]);//create a buffer with the terrain data in it
+			//console.log(mapRow);
+
+			//packet = Buffer.concat([packet,mapRow])//add it to the buffer
+
+		}
+		packet = Buffer.concat([packet,map]);
+/*
 		for (var y = 0; y < this.height; y++) {
 
+			console.log("y: " +y);
 			let mapRow = Buffer.from(this.terrain[y]);//create a buffer with the terrain data in it
+			console.log(mapRow);
 
 			packet = Buffer.concat([packet,mapRow])//add it to the buffer
 
 		} 
+		*/
 
 		console.log("World length: " + packet.length);
 

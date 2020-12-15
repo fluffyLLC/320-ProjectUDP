@@ -27,11 +27,13 @@ public class MapBuilder : NetworkObject
 
     private void GenerateMap()
     {
-        for (int x = 0; x < mapWidth; x++)
+        int i = 0;
+        for (int y = 0; y < mapHeight; y++)
         {
-            for (int y = 0; y < mapHeight; y++)
-            {
-                testMap.SetTile(new Vector3Int(x, -y, 0), testTiles[tileIDs[x+y]-1]);//set the tile equal to the tile in the tile ID slot at the relevent location
+            for (int x = 0; x < mapWidth; x++)
+             {
+                testMap.SetTile(new Vector3Int(x, -y, 0), testTiles[tileIDs[i]-1]);//set the tile equal to the tile in the tile ID slot at the relevent location
+                i++;
             }
         }
     }
@@ -63,10 +65,13 @@ public class MapBuilder : NetworkObject
 
         tileIDs = new byte[tileNum];//create array to store tile state
 
+
+
+
+
         for (int i = 0; i < tileNum; i++) {
-            tileIDs[i] = packet.ReadUInt8(i + 2);
+            tileIDs[i] = packet.ReadUInt8(i + tileDataOffset);
             //print(tileIDs[i]);
-        
         }
 
         GenerateMap();
