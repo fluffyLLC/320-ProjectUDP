@@ -17,8 +17,6 @@ exports.Game = class Game {
 		this.world = new World();
 		this.ascii = new Render();
 
-		//this.true = true;
-
 		this.initalizeMap();
 
 
@@ -27,21 +25,21 @@ exports.Game = class Game {
 	}
 
 	initalizeMap(){
-		this.mapWidth = 2000; 
-		this.mapHeight = 500; 
+		this.mapWidth = 1500; 
+		this.mapHeight = 750; 
 		//console.log(this.world.generateWorld(3,2));
 		this.world.generateWorld(this.mapWidth,this.mapHeight);
 
 
 		this.playerPos = {x:this.mapWidth/2,y:this.mapHeight/2};
-		this.ascii.render(this.playerPos,this.world);
-		this.rl = readline.createInterface(process.stdin);
+		//this.ascii.render(this.playerPos,this.world);
+		//this.rl = readline.createInterface(process.stdin);
 
-		process.stdin.on('keypress', (chunk, key) => {
-		this.handleKeyInput(key);
+		//process.stdin.on('keypress', (chunk, key) => {
+		//this.handleKeyInput(key);
 			//console.log("chunk: " + chunk + ", key: " + key.name);
 			//console.log(this.rl.line);
-		});
+		//});
 
 	}
 
