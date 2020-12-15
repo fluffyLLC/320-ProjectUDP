@@ -1,6 +1,6 @@
 const Render = require('./class-asciirender.js').Render;
 const World = require('./class-world.js').World; 
-const AppLayer = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-applayer.js').AppLayer;
+const AppLayer = require('../NetCode/class-applayer.js').AppLayer;
 
 const readline = require('readline');
 readline.emitKeypressEvents(process.stdin);

@@ -1,6 +1,6 @@
 const NetworkObj = require("./class-networkobject.js").NetworkObject;
 const psMaker = require('./noisejs-master/perlin.js');
-const AppHelper = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-apphelper.js').AppHelper;
+const AppHelper = require('../NetCode/class-apphelper.js').AppHelper;
 const PHelper = new AppHelper();//If I do not take this step I cannot access the methods inside of packet builder. I do not know why this is the case, singleton does not seem to help either.
 
 
