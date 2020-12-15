@@ -12,6 +12,10 @@ public class Buffer
     {
         return new Buffer(size);
     }
+    public static Buffer Alloc(uint size)
+    {
+        return new Buffer(size);
+    }
 
     public static Buffer From(string text)
     {
@@ -50,6 +54,12 @@ public class Buffer
         _bytes = new byte[size];
     }
 
+    private Buffer(uint size = 0)
+    {
+        if (size < 0) size = 0;
+        _bytes = new byte[size];
+    }
+
     public void Concat(byte[] newdata, int numOfBytes = -1)
     {
         if (numOfBytes < 0 || numOfBytes > newdata.Length) numOfBytes = newdata.Length;
@@ -65,6 +75,7 @@ public class Buffer
                 newbytes[i] = newdata[i - _bytes.Length];
             }
         }
+
         _bytes = newbytes;
     }
     public void Concat(Buffer other)
@@ -113,6 +124,33 @@ public class Buffer
 
         return Buffer.From(newbytes);
 
+
+    }
+
+    /// <summary>
+    /// write a range of data from another buffer to this one
+    /// </summary>
+    /// <param name="newData">the buffer from which the data will be copied</param>
+    /// <param name="dataOffset">the offset at which data will be pulled from the new data buffer</param>
+    /// <param name="dataLength">how much data should be pulled from the new data buffer</param>
+    /// <param name="targetOffset">where to start writing the data to the new buffer</param>
+    /// <returns>whether or not the copy was successfull</returns>
+    public bool WriteRange(Buffer newData, int dataOffset, int dataLength, int targetOffset = 0) {//this would return an int if it was javascript (I am think) of how much data was copied. this approach would be more flexible and should be considered in future itterations
+
+        if (newData.Length < dataOffset) dataOffset = newData.Length;
+        if (newData.Length < dataOffset + dataLength) dataLength = dataOffset - newData.Length;
+        if (dataLength == 0) return false; //Buffer.Alloc(0);
+        if (Length < dataLength + targetOffset) return false; //Buffer.Alloc(0);//can't write past the length of this buffer
+
+        Buffer dataSruncated = newData.Slice(dataOffset, dataLength);//sruncate the data down ot just the data we need to write. this is just to make the math easier/could be optamised
+
+        for (int i = targetOffset;i < targetOffset+dataLength;i++) {
+
+            _bytes[i] = dataSruncated.bytes[i - targetOffset];
+        
+        }
+
+        return true;
 
     }
 
@@ -188,14 +226,16 @@ public class Buffer
 
         return (uint)((d << 24) | (c << 16) | (b << 8) | a);
     }
-    public ushort ReadUInt32BE(int offset = 0)
+
+    public uint ReadUInt32BE(int offset = 0)
     {
         byte a = ReadByte(offset);
         byte b = ReadByte(offset + 1);
         byte c = ReadByte(offset + 2);
         byte d = ReadByte(offset + 3);
 
-        return (ushort)((a << 24) | (b << 16) | (c << 8) | d);
+        return (uint)((a << 24) | (b << 16) | (c << 8) | d);
+
     }
     public int ReadInt32LE(int offset = 0)
     {

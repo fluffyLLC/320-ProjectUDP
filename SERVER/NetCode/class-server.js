@@ -1,6 +1,7 @@
 const Game = require("D:/320/320-ProjectUDP/SERVER/GameClasses/class-game.js").Game;
 const Client = require("./class-client.js").Client;
 const Pawn = require("D:/320/320-ProjectUDP/SERVER/GameClasses/class-player.js").Player;
+const AppLayer = require("./class-applayer.js").AppLayer;
 
 
 exports.Server = class Server{
@@ -11,6 +12,9 @@ exports.Server = class Server{
 
 		//create socket
 		this.sock = require('dgram').createSocket("udp4");
+		this.appLayer = new AppLayer(this);
+		this.game = new Game();
+
 		//console.log(this.sock.on);
 
 		//setup event listeners
@@ -18,11 +22,9 @@ exports.Server = class Server{
 		this.sock.on("listening",()=>this.onStartListen());
 		this.sock.on("message",(msg,rinfo)=>this.onPacket(msg,rinfo));
 
-		this.game = new Game(this);
-
 		//this.game.objs.
-
 		this.port = 320;
+
 		this.sock.bind(this.port);
 		// start listening
 	}
@@ -39,26 +41,9 @@ exports.Server = class Server{
 	}
 	
 	onPacket(msg,rinfo){
-		console.log("packet coming in");
-		//we would normally check if the client alredy existed and thattehy actually wanted to play this game
 		//console.log("message recived");
 
-		if(msg.length < 4) return;
-
-		const packetID = msg.slice(0,4).toString();
-
-		const c = this.lookupClient(rinfo);
-
-		if(c) {
-			//console.log("client exists")
-			c.onPacket(msg,this.game);
-
-		} else {
-			if(packetID == "JOIN"){
-				this.makeClient(rinfo);
-			}
-
-		}
+		this.appLayer.handlePacketRecived(msg,rinfo);//the app layer processes all recived packets
 
 		//this.showClientList();
 
@@ -85,8 +70,9 @@ exports.Server = class Server{
 
 
 		this.showClientList();
+		
 
-		this.sendPacketToClient(this.game.world.serialize(), client);//send the client a copy of the map. I would prefer to do this elseware. --this is primarily for debugging
+		this.appLayer.sendPacketToClient(this.game.world.serialize(), client);//send the client a copy of the map. I would prefer to do this elseware. --this is primarily for debugging
 
 
 		//TODO: sent CREATE replication packets for every object...
@@ -141,25 +127,22 @@ exports.Server = class Server{
 		for(var key in this.clients){
 			this.sendPacketToClient(packet, this.clients[key]);
 		}
-
-
-
-
 	}
 
-	sendPacketToClient(packet,client){
+	sendPacketToClient(packet,client){//this should only be accessed throught the applayer
 		//console.log("sending Pakcet");
+		//console.log("sending Packet " + packet);
 		this.sock.send(packet, 0, packet.length, client.rinfo.port, client.rinfo.address,()=>{});
 
 	}
-
+/*
 	update(game){
 		for (let key in this.clients){
 			this.clients[key].update(game);
 
 		}
 
-	}
+	}*/
 
 }
 

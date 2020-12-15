@@ -22,6 +22,22 @@ public static class PacketBuilder
         return b;
     }
 
+    public static Buffer AckPacket(uint packetID, bool isFragAck = false) {
+        byte length = 8;
+        if (isFragAck) length = 12;
+
+
+        Buffer b = Buffer.Alloc(length);
+
+
+        b.WriteString("ACKN", 0);
+        b.WriteUInt32BE(packetID, 4);
+        if (isFragAck) b.WriteString("FRAG", 8);
+
+        return b;
+
+    }
+
 
 
 

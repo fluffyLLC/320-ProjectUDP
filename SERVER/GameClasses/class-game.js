@@ -1,5 +1,6 @@
 const Render = require('./class-asciirender.js').Render;
 const World = require('./class-world.js').World; 
+const AppLayer = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-applayer.js').AppLayer;
 
 //const readline = require('readline');
 //readline.emitKeypressEvents(process.stdin);
@@ -8,11 +9,11 @@ const World = require('./class-world.js').World;
 
 
 exports.Game = class Game {
-	constructor(server){
+	constructor(/*server*/){
 
 		this.time = 0;
 		this.dt = 16/1000;
-		this.server = server;
+		//this.server = server;
 		this.world = new World();
 		//this.ascii = new Render();
 
@@ -26,8 +27,8 @@ exports.Game = class Game {
 	}
 
 	initalizeMap(){
-		this.mapWidth = 20; 
-		this.mapHeight = 50; 
+		this.mapWidth = 2000; 
+		this.mapHeight = 500; 
 		//console.log(this.world.generateWorld(3,2));
 		this.world.generateWorld(this.mapWidth,this.mapHeight);
 

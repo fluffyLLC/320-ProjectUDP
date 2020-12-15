@@ -4,15 +4,17 @@ using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using UnityEngine.UI;
 
 public class ClientUDP : MonoBehaviour
 {
     public string serverHOST = "127.0.0.1";
-    public ushort serverPORT = 320; 
+    public ushort serverPORT = 320;
 
+
+    private Dictionary<byte, Frag> frags = new Dictionary<byte, Frag>(); //TODO add timeout for removing old frags
 
     UdpClient sock = new UdpClient();
-
     private static ClientUDP _singleton;
     public static ClientUDP singleton{
         get {
@@ -84,15 +86,52 @@ public class ClientUDP : MonoBehaviour
         if (packet.Length < 9) return;
 
         string id = packet.ReadString(0, 4);
+        //print(id + " packet recieved");
+
+        byte ack = packet.ReadUInt8(4);
+        // print(ack);
+
+        uint packetID = packet.ReadUInt32BE(5);
+        //print(packetID);
+
+        if (ack == 1 && id != "FRAG") SendPacket(PacketBuilder.AckPacket(packetID));
+
+        //TODO: add a length check in order to make sure we got the whole packet // a check for corruption would also be appropriate
 
         //TODO: process Header for frag annd ACK packets
 
 
         switch (id) {
-            case "REPL":
+            case "FRAG":
 
-                //ProcessPacketREPL(packet);
+                if (packet.Length < 17) return;
                 
+                byte fragID = packet.ReadUInt8(9);
+
+                if (frags.ContainsKey(fragID))
+                {
+                    Buffer completePacket = frags[fragID].ProcessFrag(packet);
+
+                    if (completePacket.Length > 0)
+                    {
+                        //print("completed packet returntd");
+                        frags.Remove(fragID);//remove the frag packet in csae th efrag ID gets reused
+                        SendPacket(PacketBuilder.AckPacket(packetID));//send ack for final frag packet
+                        ProcessPacket(completePacket);//process the complete frag packet
+                        
+                    }
+                    else {
+                        SendPacket(PacketBuilder.AckPacket(packetID, true));
+
+                    }
+
+
+                }
+                else {
+                    frags.Add(fragID, new Frag(packet));
+                    SendPacket(PacketBuilder.AckPacket(packetID,true));
+                    //frags[fragID]
+                }
 
                 break;
 
@@ -122,14 +161,11 @@ public class ClientUDP : MonoBehaviour
 
                 break;
 
-
-
-
-
-
         }
 
         
+
+
     }
 
     private void ProcessPacketREPL(Buffer packet) //not recognised in protocall, this function is here for refrence

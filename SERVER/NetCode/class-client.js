@@ -1,6 +1,7 @@
 //const NetworkObj = require("./GameClasses/class-networkobject.js").NetworkObject;
 //const Game = require("./class-game.js").Game;
 //const Pawn = require("./GameClasses/class-player.js").Player;
+const AckList = require("./class-acklist.js").AckList;
 
 
 
@@ -13,6 +14,8 @@ exports.Client = class Client {//handles net code
 
 	constructor(rinfo){
 		this.rinfo = rinfo;
+		//this.
+		this.ack = new AckList();
 		
 		/*
 		this.input = {

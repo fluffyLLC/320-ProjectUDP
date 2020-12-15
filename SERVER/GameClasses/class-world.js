@@ -1,7 +1,7 @@
 const NetworkObj = require("./class-networkobject.js").NetworkObject;
 const psMaker = require('./noisejs-master/perlin.js');
-const PacketBuilder = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-packetbuilder.js').PacketBuilder;
-const PHelper = new PacketBuilder();//If I do not take this step I cannot access the methods inside of packet builder. I do not know why this is the case, singleton does not seem to help either.
+const AppHelper = require('D:/320/320-ProjectUDP/SERVER/NetCode/class-apphelper.js').AppHelper;
+const PHelper = new AppHelper();//If I do not take this step I cannot access the methods inside of packet builder. I do not know why this is the case, singleton does not seem to help either.
 
 
 //psMaker.noise.seed(1);
@@ -19,8 +19,7 @@ exports.World = class World extends NetworkObj{
 		//Math.round
 		//TODO: add 'map' property that contains a visual representation of the world
 		this.terrain = [];
-		//console.log(NetworkObj.serialize());
-		//console.log(PacketBuilder.Singleton.makeHeader("TEST",0));
+		
 
 		/*process.stdout.on('resize',() => {
 			console.clear();
@@ -144,7 +143,7 @@ exports.World = class World extends NetworkObj{
 
 		} 
 
-		console.log(packet.length);
+		console.log("World length: " + packet.length);
 
 		return packet;
 

@@ -43,6 +43,8 @@ public class MapBuilder : NetworkObject
     }
 
     public override int Deserialize(Buffer packet) {
+        
+       // print("decerial");
 
         //TODO: double check that all tile data has been sent
         //TODO: set the Network ID for the map
@@ -50,16 +52,20 @@ public class MapBuilder : NetworkObject
         int tileDataOffset = 2;//the number of bytes in that the tile data starts. derived from the protocall
 
         mapWidth = packet.ReadInt16BE();//get map width
+        print("map width " + mapWidth);
+        print(packet.Length);
 
         int tileNum = packet.Length - tileDataOffset;//get number of tiles
+        print("TileNum " + tileNum);
 
         mapHeight = tileNum / mapWidth;//get map height
+        print("map Height " + mapHeight);
 
         tileIDs = new byte[tileNum];//create array to store tile state
 
         for (int i = 0; i < tileNum; i++) {
             tileIDs[i] = packet.ReadUInt8(i + 2);
-            print(tileIDs[i]);
+            //print(tileIDs[i]);
         
         }
 

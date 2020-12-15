@@ -24,7 +24,7 @@ communicate with relevant clients
 
 
 ----------------------------------------------------
-Header | all packets will contain the following
+Header | all packets from server will contain the following
 ----------------------------------------------------
 	
 	O 	L	Datatype	Desc
@@ -48,6 +48,12 @@ ACKN - sent to acknowlege the recipt of a packet that requires acknowlegment
 	O	L	Datatype	Desc
 	========================
 	0	4	ascii		"ACKN"
+	4	4	uint32BE	PacketID of ack packet
+
+	8	4	ascii		"FRAG" this is only sent if this is a ack for a frag packet, should not be sent along with 	
+							the final frag ack //could be more efficent?
+
+
 
 JOIN - Sent when joining the game
 
@@ -73,6 +79,25 @@ MAPG - This packet is sent containing all of the ground data for the map. This p
 	9	2	uint16BE	map X-length (width or coloms)	
 	11	??	uint8		Type of ground tile. There are 255 possible types!
 						there is one int for every tile
+
+
+FRAG - 	This packet is sent when a message exceeds the MTU (the hard limit on this is 1500 bytes, but we set it at 1000 just in case) there will always be a sequence sent one after another with a min of 2.  
+
+	O 	L	Datatype	Desc
+	================================
+	0	4	ascii		"FRAG"
+	4	1	uint8		"1" 
+	5	4	uint32BE	Packet ID
+
+	9	1	uint8		Frag ID - this is the same for all packets in a frag sequence
+	10	2	uint16BE 		The order this frag packet should have been recived in starting with 1
+	12	4	uint32BE	Total bytes in frag sequence (if first frag packet) | the offset at which these bytes should be placed
+	16	2	uint16BE	number of bytes sent in this packet from the fragged packet
+	18	?	????		the bytes this frag packet is wrapping
+
+
+
+
 
 
 
